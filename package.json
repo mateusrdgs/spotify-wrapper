@@ -1,0 +1,49 @@
+{
+  "name": "spotify-wrapper",
+  "version": "1.0.0",
+  "description": "A wrapper to work with Spotify web API",
+  "keywords": [
+    "js",
+    "tdd",
+    "library"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint src/*.js",
+    "prepush": "yarn run lint",
+    "test": "./node_modules/.bin/mocha tests/**/*.js --require babel-register",
+    "test:watch": "yarn run test --watch",
+    "test:coverage": "nyc yarn test"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 80,
+    "functions": 80,
+    "exclude": [
+      "tests/**"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ]
+  },
+  "repository": "git@github.com:mateusrdgs/spotify-wrapper.git",
+  "author": "Mateus Rodrigues <devrdgs@gmail.com> (https://mateusrdgs.com.br/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mateusrdgs/spotify-wrapper/issues"
+  },
+  "homepage": "https://github.com/mateusrdgs/spotify-wrapper#readme",
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "dirty-chai": "^2.0.1",
+    "eslint": "^4.13.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "husky": "^0.14.3",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0"
+  }
+}
