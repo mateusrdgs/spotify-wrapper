@@ -50,6 +50,7 @@
     "sinon-stub-promise": "^4.0.0"
   },
   "dependencies": {
+    "dotenv": "^4.0.0",
     "node-fetch": "^1.7.3"
   }
 }
