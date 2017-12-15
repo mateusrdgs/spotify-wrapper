@@ -1,16 +1,12 @@
 /* eslint-env browser */
 
-require('dotenv').config();
+import { API_URL, REQUEST_OPTIONS, RESPONSE_HANDLER } from '../shared/consts';
+
+global.fetch = require('node-fetch');
 
 export const search = (query, type) =>
-  fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${process.env.SPOTIFY_TOKEN}`,
-    },
-  })
-    .then(response => response.json());
-
+  fetch(`${API_URL}search?q=${query}&type=${type}`, REQUEST_OPTIONS)
+    .then(RESPONSE_HANDLER);
 
 export const searchArtist = query =>
   search(query, 'artist');

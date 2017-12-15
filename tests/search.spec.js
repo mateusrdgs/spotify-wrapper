@@ -5,9 +5,9 @@ import dirtyChai from 'dirty-chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinonStubPromise from 'sinon-stub-promise';
-import { search, searchArtist, searchAlbums, searchTracks, searchPlaylists } from '../src/index';
 
-global.fetch = require('node-fetch');
+import { search, searchArtist, searchAlbums, searchTracks, searchPlaylists } from '../src/_index';
+import { API_URL } from '../shared/consts';
 
 chai.use(dirtyChai);
 chai.use(sinonChai);
@@ -49,15 +49,15 @@ describe('Spotify wrapper', () => {
       context('passing one type only', () => {
         const artists = search('Metallica', 'artist');
         expect(stubedFetch).to.have.been
-          .calledWith('https://api.spotify.com/v1/search?q=Metallica&type=artist');
+          .calledWith(`${API_URL}search?q=Metallica&type=artist`);
         const albums = search('Metallica', 'album');
         expect(stubedFetch).to.have.been
-          .calledWith('https://api.spotify.com/v1/search?q=Metallica&type=album');
+          .calledWith(`${API_URL}search?q=Metallica&type=album`);
       });
       context('passing more than one type', () => {
         const artistsAndAlbums = search('Metallica', ['artist', 'album']);
         expect(stubedFetch).to.have.been
-          .calledWith('https://api.spotify.com/v1/search?q=Metallica&type=artist,album');
+          .calledWith(`${API_URL}search?q=Metallica&type=artist,album`);
       });
     });
     it('should return the JSON Data from the Promise', () => {
@@ -82,10 +82,10 @@ describe('Spotify wrapper', () => {
     });
     it('should fetch with the correct url', () => {
       const artist = searchArtist('Lamb of God');
-      expect(stubedFetch).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Lamb of God&type=artist');
+      expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Lamb of God&type=artist`);
 
       const artist2 = searchArtist('Gojira');
-      expect(stubedFetch).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Gojira&type=artist');
+      expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Gojira&type=artist`);
     });
   });
   describe('Search albums', () => {
@@ -104,7 +104,7 @@ describe('Spotify wrapper', () => {
     });
     it('should have been called with the correct url', () => {
       const albums = searchAlbums('Meshuggah');
-      expect(stubedFetch).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Meshuggah&type=album');
+      expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Meshuggah&type=album`);
     });
   });
   describe('Search tracks', () => {
@@ -123,7 +123,7 @@ describe('Spotify wrapper', () => {
     });
     it('should have been called with the correct url', () => {
       const tracks = searchTracks('Trivium');
-      expect(stubedFetch).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Trivium&type=tracks');
+      expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Trivium&type=tracks`);
     });
   });
   describe('Search playlists', () => {
@@ -142,7 +142,7 @@ describe('Spotify wrapper', () => {
     });
     it('should to have been called with the correct url', () => {
       const playlists = searchPlaylists('Týr');
-      expect(stubedFetch).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Týr&type=playlists');
+      expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Týr&type=playlists`);
     });
   });
 });

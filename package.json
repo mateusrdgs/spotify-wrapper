@@ -9,8 +9,9 @@
   ],
   "main": "index.js",
   "scripts": {
+    "start": "babel-node index.js",
     "lint": "./node_modules/.bin/eslint src/*.js",
-    "prepush": "yarn run lint",
+    "prepush": "yarn lint",
     "test": "./node_modules/.bin/mocha tests/**/*.js --require babel-register",
     "test:watch": "yarn run test --watch",
     "test:coverage": "nyc yarn test"
@@ -20,7 +21,9 @@
     "lines": 80,
     "functions": 80,
     "exclude": [
-      "tests/**"
+      "tests/**",
+      "shared/consts.js",
+      "src/index.js"
     ],
     "reporter": [
       "text",
