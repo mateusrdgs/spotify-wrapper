@@ -6,142 +6,110 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinonStubPromise from 'sinon-stub-promise';
 
-import { search, searchArtist, searchAlbums, searchTracks, searchPlaylists } from '../src/index';
+import SpotifyWrapper from '../src/index';
 import { API_URL } from '../shared/consts';
 
 chai.use(dirtyChai);
 chai.use(sinonChai);
 sinonStubPromise(sinon);
 
-describe('Spotify wrapper', () => {
+describe('Search', () => {
+  let spotify;
+  let stubedFetch;
+  let promise;
+  beforeEach(() => {
+    spotify = new SpotifyWrapper({
+      apiURL: 'https://api.spotify.com/v1',
+      token: 'BQBTk_DaocGZlvW64gXf1AFlvbE1iQEA6rMya65wcjGzILAvM0GFqAKAFgFTDupHfbQmU81rsySqX7_6z4WxlmHyaH9AJ2g-XsZEkXM-LM_yiUeaF5ckbh5fEMrwqGKg2btXCps5bfaAc2PnEestduYrLBXtokpuAAmIRA',
+    });
+    stubedFetch = sinon.stub(global, 'fetch');
+    promise = stubedFetch.returnsPromise();
+  });
+  afterEach(() => {
+    stubedFetch.restore();
+  });
   describe('Smoke tests', () => {
-    it('should exists the search method', () => {
-      expect(search).to.exist();
+    it('should exists the searchBy method', () => {
+      expect(spotify.search.searchBy).to.exist();
     });
     it('should exists the searchArtist method', () => {
-      expect(searchArtist).to.exist();
+      expect(spotify.search.searchArtist).to.exist();
     });
     it('should exists the searchAlbums method', () => {
-      expect(searchAlbums).to.exist();
+      expect(spotify.search.searchAlbums).to.exist();
     });
     it('should exists the searchTracks method', () => {
-      expect(searchTracks).to.exist();
+      expect(spotify.search.searchTracks).to.exist();
     });
     it('should exists the searchPlaylists method', () => {
-      expect(searchPlaylists).to.exist();
+      expect(spotify.search.searchPlaylists).to.exist();
     });
   });
   describe('Generic search', () => {
-    let stubedFetch;
-    let promise;
-    beforeEach(() => {
-      stubedFetch = sinon.stub(global, 'fetch');
-      promise = stubedFetch.returnsPromise();
-    });
-    afterEach(() => {
-      stubedFetch.restore();
-    });
     it('should call fetch function', () => {
-      const artists = search();
+      const artists = spotify.search.searchBy();
       expect(stubedFetch).to.have.been.calledOnce();
     });
-    it('should receive the correct url to fetch', () => {
+    it('should call fetch with the correct url', () => {
       context('passing one type only', () => {
-        const artists = search('Metallica', 'artist');
+        const artists = spotify.search.searchBy('Metallica', 'artist');
         expect(stubedFetch).to.have.been
           .calledWith(`${API_URL}search?q=Metallica&type=artist`);
-        const albums = search('Metallica', 'album');
+        const albums = spotify.search.searchBy('Metallica', 'album');
         expect(stubedFetch).to.have.been
           .calledWith(`${API_URL}search?q=Metallica&type=album`);
       });
       context('passing more than one type', () => {
-        const artistsAndAlbums = search('Metallica', ['artist', 'album']);
+        const artistsAndAlbums = spotify.search.searchBy('Metallica', ['artist', 'album']);
         expect(stubedFetch).to.have.been
           .calledWith(`${API_URL}search?q=Metallica&type=artist,album`);
       });
     });
     it('should return the JSON Data from the Promise', () => {
       promise.resolves({ body: 'json' });
-      const artists = search('Metallica', 'artist');
+      const artists = spotify.search.searchBy('Metallica', 'artist');
       expect(artists.resolveValue).to.be.eql({ body: 'json' });
     });
   });
   describe('Search artists', () => {
-    let stubedFetch;
-    let promise;
-    beforeEach(() => {
-      stubedFetch = sinon.stub(global, 'fetch');
-      promise = stubedFetch.returnsPromise();
-    });
-    afterEach(() => {
-      stubedFetch.restore();
-    });
     it('should call fetch function', () => {
-      const artist = searchArtist('Lamb of God');
+      const artist = spotify.search.searchArtist('Lamb of God');
       expect(stubedFetch).to.have.been.calledOnce();
     });
-    it('should fetch with the correct url', () => {
-      const artist = searchArtist('Lamb of God');
+    it('should call fetch with the correct url', () => {
+      const artist = spotify.search.searchArtist('Lamb of God');
       expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Lamb of God&type=artist`);
-
-      const artist2 = searchArtist('Gojira');
+      const artist2 = spotify.search.searchArtist('Gojira');
       expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Gojira&type=artist`);
     });
   });
   describe('Search albums', () => {
-    let stubedFetch;
-    let promise;
-    beforeEach(() => {
-      stubedFetch = sinon.stub(global, 'fetch');
-      promise = stubedFetch.returnsPromise();
-    });
-    afterEach(() => {
-      stubedFetch.restore();
-    });
     it('should call the fetch function', () => {
-      const albums = searchAlbums('Metallica');
+      const albums = spotify.search.searchAlbums('Metallica');
       expect(stubedFetch).to.have.been.calledOnce();
     });
-    it('should have been called with the correct url', () => {
-      const albums = searchAlbums('Meshuggah');
+    it('should call fetch with the correct url', () => {
+      const albums = spotify.search.searchAlbums('Meshuggah');
       expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Meshuggah&type=album`);
     });
   });
   describe('Search tracks', () => {
-    let stubedFetch;
-    let promise;
-    beforeEach(() => {
-      stubedFetch = sinon.stub(global, 'fetch');
-      promise = stubedFetch.returnsPromise();
-    });
-    afterEach(() => {
-      stubedFetch.restore();
-    });
     it('should call the fetch function', () => {
-      const tracks = searchTracks('Trivium');
+      const tracks = spotify.search.searchTracks('Trivium');
       expect(stubedFetch).to.have.been.calledOnce();
     });
-    it('should have been called with the correct url', () => {
-      const tracks = searchTracks('Trivium');
+    it('should call fetch with the correct url', () => {
+      const tracks = spotify.search.searchTracks('Trivium');
       expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Trivium&type=tracks`);
     });
   });
   describe('Search playlists', () => {
-    let stubedFetch;
-    let promise;
-    beforeEach(() => {
-      stubedFetch = sinon.stub(global, 'fetch');
-      promise = stubedFetch.returnsPromise();
-    });
-    afterEach(() => {
-      stubedFetch.restore();
-    });
     it('should call the fetch function', () => {
-      const playlists = searchPlaylists('Týr');
+      const playlists = spotify.search.searchPlaylists('Týr');
       expect(stubedFetch).to.have.been.calledOnce();
     });
-    it('should to have been called with the correct url', () => {
-      const playlists = searchPlaylists('Týr');
+    it('should call fetch with the correct url', () => {
+      const playlists = spotify.search.searchPlaylists('Týr');
       expect(stubedFetch).to.have.been.calledWith(`${API_URL}search?q=Týr&type=playlists`);
     });
   });
