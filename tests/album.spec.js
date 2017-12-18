@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinonStubPromise from 'sinon-stub-promise';
 
-import { getAlbum, getAlbums, getAlbumTracks } from '../src/_index';
+import { getAlbum, getAlbums, getAlbumTracks } from '../src/index';
 import { API_URL } from '../shared/consts';
 
 chai.use(dirtyChai);
