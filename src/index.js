@@ -1,5 +1,5 @@
-import { search, searchArtist, searchAlbums, searchTracks, searchPlaylists } from './search';
-import { getAlbum, getAlbums, getAlbumTracks } from './album';
+// import { search, searchArtist, searchAlbums, searchTracks, searchPlaylists } from './search';
+// import { getAlbum, getAlbums, getAlbumTracks } from './album';
 import { API_URL } from '../shared/consts';
 /* export default {
   search,
